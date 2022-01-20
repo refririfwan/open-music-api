@@ -16,5 +16,8 @@
   "bugs": {
     "url": "https://github.com/refririfwan/open-music-api-v1/issues"
   },
-  "homepage": "https://github.com/refririfwan/open-music-api-v1#readme"
+  "homepage": "https://github.com/refririfwan/open-music-api-v1#readme",
+  "devDependencies": {
+    "eslint": "^8.7.0"
+  }
 }
