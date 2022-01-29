@@ -111,18 +111,20 @@ const deleteAlbumByIdHandler = (request, h) => {
 };
 
 const addSongHandler = (request, h) => {
-  const { title = 'untitled', performer } = request.payload;
+  const {
+    title = 'untitled', performer, year, genre, duration, albumId,
+  } = request.payload;
 
   const hash = nanoid(16);
   const id = `song-${hash}`;
   const createdAt = new Date().toISOString();
   const updateAt = createdAt;
 
-  const newAlbum = {
-    title, performer, id, createdAt, updateAt,
+  const newSong = {
+    title, performer, year, genre, duration, id, albumId, createdAt, updateAt,
   };
 
-  songs.push(newAlbum);
+  songs.push(newSong);
 
   const isSuccess = songs.filter((song) => song.id === id).length > 0;
 
@@ -173,7 +175,9 @@ const getSongByIdHandler = (request, h) => {
 const editSongByIdHandler = (request, h) => {
   const { id } = request.params;
 
-  const { title, performer } = request.payload;
+  const {
+    title = 'untitled', performer, year, genre, duration, albumId,
+  } = request.payload;
   const updatedAt = new Date().toISOString();
 
   const index = songs.findIndex((song) => song.id === id);
@@ -183,6 +187,10 @@ const editSongByIdHandler = (request, h) => {
       ...songs[index],
       performer,
       title,
+      year,
+      genre,
+      duration,
+      albumId,
       updatedAt,
     };
 
