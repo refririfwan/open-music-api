@@ -1,34 +1,33 @@
 /* eslint-disable no-underscore-dangle */
 const ClientError = require('../../exceptions/ClientError');
 
-class SongsHandler {
+class AlbumsHandler {
   constructor(service, validator) {
     this._service = service;
     this._validator = validator;
 
-    this.postSongHandler = this.postSongHandler.bind(this);
-    this.getSongsHandler = this.getSongsHandler.bind(this);
-    this.getSongByIdHandler = this.getSongByIdHandler.bind(this);
-    this.putSongByIdHandler = this.putSongByIdHandler.bind(this);
-    this.deleteSongByIdHandler = this.deleteSongByIdHandler.bind(this);
+    this.postAlbumHandler = this.postAlbumHandler.bind(this);
+    this.getAlbumByIdHandler = this.getAlbumByIdHandler.bind(this);
+    this.putAlbumByIdHandler = this.putAlbumByIdHandler.bind(this);
+    this.deleteAlbumByIdHandler = this.deleteAlbumByIdHandler.bind(this);
   }
 
-  postSongHandler(request, h) {
+  postAlbumHandler(request, h) {
     try {
-      this._validator.validateSongPayload(request.payload);
+      this._validator.validateAlbumPayload(request.payload);
       const {
-        title = 'untitled', performer, year, genre, duration, albumId,
+        name, year,
       } = request.payload;
 
-      const songId = this._service.addSong({
-        title, performer, year, genre, duration, albumId,
+      const albumId = this._service.addAlbum({
+        name, year,
       });
 
       const response = h.response({
         status: 'success',
-        message: 'Song success added',
+        message: 'Album success added',
         data: {
-          songId,
+          albumId,
         },
       });
       response.code(201);
@@ -55,24 +54,14 @@ class SongsHandler {
     }
   }
 
-  getSongsHandler() {
-    const songs = this._service.getSongs();
-    return {
-      status: 'success',
-      data: {
-        songs,
-      },
-    };
-  }
-
-  getSongByIdHandler(request, h) {
+  getAlbumByIdHandler(request, h) {
     try {
       const { id } = request.params;
-      const song = this._service.getSongById(id);
+      const album = this._service.getAlbumById(id);
       return {
         status: 'success',
         data: {
-          song,
+          album,
         },
       };
     } catch (error) {
@@ -97,16 +86,16 @@ class SongsHandler {
     }
   }
 
-  putSongByIdHandler(request, h) {
+  putAlbumByIdHandler(request, h) {
     try {
-      this._validator.validateSongPayload(request.payload);
+      this._validator.validateAlbumPayload(request.payload);
       const { id } = request.params;
 
-      this._service.editSongById(id, request.payload);
+      this._service.editAlbumById(id, request.payload);
 
       return {
         status: 'success',
-        message: 'Song has been updated',
+        message: 'Album has been updated',
       };
     } catch (error) {
       if (error instanceof ClientError) {
@@ -130,13 +119,13 @@ class SongsHandler {
     }
   }
 
-  deleteSongByIdHandler(request, h) {
+  deleteAlbumByIdHandler(request, h) {
     try {
       const { id } = request.params;
-      this._service.deleteSongById(id);
+      this._service.deleteAlbumById(id);
       return {
         status: 'success',
-        message: 'Song has been deleted',
+        message: 'Album has been deleted',
       };
     } catch (error) {
       if (error instanceof ClientError) {
@@ -161,4 +150,4 @@ class SongsHandler {
   }
 }
 
-module.exports = SongsHandler;
+module.exports = AlbumsHandler;
