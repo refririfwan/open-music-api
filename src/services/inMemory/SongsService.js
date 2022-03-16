@@ -74,4 +74,4 @@ class SongsService {
   }
 }
 
-module.export = SongsService;
+module.exports = SongsService;

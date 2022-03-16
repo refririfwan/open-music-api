@@ -1,12 +1,11 @@
 const Hapi = require('@hapi/hapi');
-const routes = require('./routes');
 const albums = require('./api/albums');
 const songs = require('./api/songs');
 const AlbumsService = require('./services/inMemory/AlbumsService');
 const SongsService = require('./services/inMemory/SongsService');
 
 const init = async () => {
-  const albumService = new AlbumsService();
+  const albumsService = new AlbumsService();
   const songsService = new SongsService();
 
   const server = Hapi.server({
@@ -19,12 +18,10 @@ const init = async () => {
     },
   });
 
-  server.route(routes);
-
   await server.register({
     plugin: albums,
     options: {
-      service: albumService,
+      service: albumsService,
     },
   });
 

@@ -62,4 +62,4 @@ class AlbumsServices {
   }
 }
 
-module.export = AlbumsServices;
+module.exports = AlbumsServices;
