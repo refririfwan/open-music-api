@@ -102,3 +102,9 @@ dist
 
 # TernJS port file
 .tern-port
+
+# Custom
+node_modules
+notes-api-web-server.pem
+.env
+.prod.env
