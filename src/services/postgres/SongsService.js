@@ -9,69 +9,81 @@ class SongsService {
     this._pool = new Pool();
   }
 
-  addSong({
-    title, performer, year, genre, duration, albumId,
-  }) {
+  async addSong({ title, performer, year, genre, duration, albumId, }) {
     const id = nanoid(16);
     const createdAt = new Date().toISOString();
     const updatedAt = createdAt;
 
-    const newSong = {
-      id, title, performer, year, genre, duration, albumId, updatedAt,
+    const query = {
+      text: 'INSERT INTO albums VALUES($1, $2, $3, $4, $5, $6, $7, $8,$9) RETURNING id',
+      values: [id, albumId, title, year, genre, performer, duration, createdAt,updatedAt],
     };
 
-    this._songs.push(newSong);
+    const result = await this._pool.query(query);
 
-    const isSuccess = this._songs.filter((note) => note.id === id).length > 0;
-
-    if (!isSuccess) {
-      throw new InvariantError('Album fail to added');
+    if (!result.rows[0].id) {
+      throw new InvariantError('Song fail to added');
     }
 
-    return id;
+    return result.rows[0].id;
   }
 
-  getSongs() {
-    return this._songs;
+  async getSongs() {
+    const query = {
+      text: 'SELECT * FROM songs',
+    }
+
+    const result = await this._pool.query(query);
+
+    if (!result.rows.length) {
+      throw new NotFoundError('Songs not found');
+    }
+
+    return result.rows.map(mapDBToModel)[0];
   }
 
-  getSongById(id) {
-    const song = this._songs.filter((n) => n.id === id)[0];
-    if (!song) {
+  async getSongById(id) {
+    const query = {
+      text: 'SELECT * FROM songs WHERE id = $1',
+      values: [id],
+    };
+
+    const result = await this._pool.query(query);
+
+    if (!result.rows.length) {
       throw new NotFoundError('Song not found');
     }
-    return song;
+
+    return result.rows.map(mapDBToModel)[0];
   }
 
-  editSongById(id, {
-    title, performer, year, genre, duration, albumId,
-  }) {
-    const index = this._songs.findIndex((note) => note.id === id);
+  async editSongById(id, { title, performer, year, genre, duration, albumId, }) {
+    const updatedAt = new Date().toISOString();
 
-    if (index === -1) {
+    const query = {
+      text: 'UPDATE songs SET title = $1, year = $2, genre = $3, performer = $4, duration = $5, albumId = $6 updated_at = $7 WHERE id = $8 RETURNING id',
+      values: [title, year, genre, performer, duration, albumId, updatedAt, id],
+    };
+
+    const result = await this._pool.query(query);
+
+    if (!result.rows.length) {
       throw new NotFoundError('Failed update song. Id not found');
     }
 
-    const updatedAt = new Date().toISOString();
-
-    this._songs[index] = {
-      ...this._songs[index],
-      title,
-      year,
-      performer,
-      genre,
-      duration,
-      albumId,
-      updatedAt,
-    };
   }
 
   deleteSongById(id) {
-    const index = this._songs.findIndex((note) => note.id === id);
-    if (index === -1) {
-      throw new NotFoundError('Song failed to delete. Id not found');
+    const query = {
+      text: 'DELETE FROM songs WHERE id = $1 RETURNING id',
+      values: [id],
+    };
+
+    const result = await this._pool.query(query);
+
+    if (!result.rows.length) {
+      throw new NotFoundError('Song fail to delete. Id not found');
     }
-    this._songs.splice(index, 1);
   }
 }
 

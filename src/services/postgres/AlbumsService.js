@@ -9,57 +9,64 @@ class AlbumsServices {
     this._pool = new Pool();
   }
 
-  addAlbum({ name, year }) {
+  async addAlbum({ name, year }) {
     const id = nanoid(16);
     const createdAt = new Date().toISOString();
     const updatedAt = createdAt;
 
-    const newAlbum = {
-      name, year, id, createdAt, updatedAt,
+    const query = {
+      text: 'INSERT INTO albums VALUES($1, $2, $3, $4, $5) RETURNING id',
+      values: [id, name, year, createdAt, updatedAt],
     };
 
-    this._albums.push(newAlbum);
+    const result = await this._pool.query(query);
 
-    const isSuccess = this._albums.filter((note) => note.id === id).length > 0;
-
-    if (!isSuccess) {
+    if (!result.rows[0].id) {
       throw new InvariantError('Album fail to added');
     }
 
-    return id;
+    return result.rows[0].id;
   }
 
-  getAlbumById(id) {
-    const album = this._albums.filter((n) => n.id === id)[0];
-    if (!album) {
+  async getAlbumById(id) {
+    const query = {
+      text: 'SELECT * FROM albums WHERE id = $1',
+      values: [id],
+    };
+    const result = await this._pool.query(query);
+
+    if (!result.rows.length) {
       throw new NotFoundError('Album not found');
     }
-    return album;
+
+    return result.rows.map(mapDBToModel)[0];
   }
 
-  editAlbumById(id, { name, year }) {
-    const index = this._albums.findIndex((note) => note.id === id);
+  async editAlbumById(id, { name, year }) {
+    const updatedAt = new Date().toISOString();
+    const query = {
+      text: 'UPDATE albums SET name = $1, year = $2, updated_at = $3 WHERE id = $4 RETURNING id',
+      values: [name, year, updatedAt, id],
+    };
 
-    if (index === -1) {
+    const result = await this._pool.query(query);
+
+    if (!result.rows.length) {
       throw new NotFoundError('Failed update album. Id not found');
     }
-
-    const updatedAt = new Date().toISOString();
-
-    this._albums[index] = {
-      ...this._albums[index],
-      name,
-      year,
-      updatedAt,
-    };
   }
 
   deleteAlbumById(id) {
-    const index = this._albums.findIndex((note) => note.id === id);
-    if (index === -1) {
-      throw new NotFoundError('Album failed to delete. Id not found');
+    const query = {
+      text: 'DELETE FROM albums WHERE id = $1 RETURNING id',
+      values: [id],
+    };
+
+    const result = await this._pool.query(query);
+
+    if (!result.rows.length) {
+      throw new NotFoundError('Album fail to delete. Id not found');
     }
-    this._albums.splice(index, 1);
   }
 }
 

@@ -8,7 +8,7 @@ exports.up = (pgm) => {
       type: 'VARCHAR(50)',
       primaryKey: true,
     },
-    almbumId: {
+    albumId: {
       type: 'VARCHAR(50)',
       foreignKey: true,
     },
