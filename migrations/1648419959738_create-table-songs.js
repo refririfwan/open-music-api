@@ -17,7 +17,7 @@ exports.up = (pgm) => {
       notNull: true,
     },
     year: {
-      type: 'NUMERIC',
+      type: 'SMALLINT',
       notNull: true,
     },
     genre: {
@@ -29,7 +29,7 @@ exports.up = (pgm) => {
       notNull: true,
     },
     duration: {
-      type: 'NUMERIC',
+      type: 'INTEGER',
       notNull: true,
     },
     created_at: {
