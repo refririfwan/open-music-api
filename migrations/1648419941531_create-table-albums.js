@@ -10,19 +10,15 @@ exports.up = (pgm) => {
     },
     name: {
       type: 'TEXT',
-      notNull: true,
     },
     year: {
       type: 'SMALLINT',
-      notNull: true,
     },
     created_at: {
       type: 'TEXT',
-      notNull: true,
     },
     updated_at: {
       type: 'TEXT',
-      notNull: true,
     },
   });
 };

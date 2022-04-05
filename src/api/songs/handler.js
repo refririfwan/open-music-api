@@ -17,11 +17,11 @@ class SongsHandler {
     try {
       this._validator.validateSongPayload(request.payload);
       const {
-        title = 'untitled', performer, year, genre, duration, albumId,
+        title = 'untitled', performer, year, genre, duration, albumid,
       } = request.payload;
 
       const songId = await this._service.addSong({
-        title, performer, year, genre, duration, albumId,
+        title, performer, year, genre, duration, albumid,
       });
 
       const response = h.response({
@@ -55,20 +55,39 @@ class SongsHandler {
     }
   }
 
-  async getSongsHandler() {
-    const songs = await this._service.getSongs();
-    return {
-      status: 'success',
-      data: {
-        songs: [
-          {
-            id,
-            title, 
-            performer,
-          },
-        ],
-      },
-    };
+  async getSongsHandler(request, h) {
+    try {
+      const songs = await this._service.getSongs();
+      return {
+        status: 'success',
+        data: {
+          songs: songs.map((song) => ({
+            id: song.id,
+            title: song.title,
+            performer: song.performer,
+          })),
+        },
+      };
+    } catch (error) {
+      if (error instanceof ClientError) {
+        const response = h.response({
+          status: 'fail',
+          message: error.message,
+        });
+        response.code(error.statusCode);
+        return response;
+      }
+
+      // Server ERROR!
+      const response = h.response({
+        status: 'error',
+        message: 'Sorry, Internal Server Error.',
+      });
+      response.code(500);
+      // eslint-disable-next-line no-console
+      console.error(error);
+      return response;
+    }
   }
 
   async getSongByIdHandler(request, h) {

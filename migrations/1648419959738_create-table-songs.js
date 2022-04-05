@@ -8,37 +8,30 @@ exports.up = (pgm) => {
       type: 'VARCHAR(50)',
       primaryKey: true,
     },
-    albumId: {
+    albumid: {
       type: 'VARCHAR(50)',
       foreignKey: true,
     },
     title: {
       type: 'TEXT',
-      notNull: true,
     },
     year: {
       type: 'SMALLINT',
-      notNull: true,
     },
     genre: {
       type: 'TEXT',
-      notNull: true,
     },
     performer: {
       type: 'TEXT',
-      notNull: true,
     },
     duration: {
       type: 'INTEGER',
-      notNull: true,
     },
     created_at: {
       type: 'TEXT',
-      notNull: true,
     },
     updated_at: {
       type: 'TEXT',
-      notNull: true,
     },
   });
 };
