@@ -40,7 +40,7 @@ class SongsService {
       throw new NotFoundError('Songs not found');
     }
 
-    return result.rows.map(mapDBToModel)[0];
+    return result.rows.map(mapDBToModel);
   }
 
   async getSongById(id) {
