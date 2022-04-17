@@ -19,8 +19,10 @@ class AlbumsHandler {
         name, year,
       } = request.payload;
 
+      const { id: credentialId } = request.auth.credentials;
+
       const albumId = await this._service.addAlbum({
-        name, year,
+        name, year, owner: credentialId,
       });
 
       const response = h.response({
@@ -57,6 +59,8 @@ class AlbumsHandler {
   async getAlbumByIdHandler(request, h) {
     try {
       const { id } = request.params;
+      const { id: credentialId } = request.auth.credentials;
+      await this._service.verifyAlbumOwner(id, credentialId);
       const album = await this._service.getAlbumById(id);
       return {
         status: 'success',
@@ -90,6 +94,9 @@ class AlbumsHandler {
     try {
       this._validator.validateAlbumPayload(request.payload);
       const { id } = request.params;
+      
+      const { id: credentialId } = request.auth.credentials;
+      await this._service.verifyAlbumOwner(id, credentialId);
 
       await this._service.editAlbumById(id, request.payload);
 
@@ -122,6 +129,8 @@ class AlbumsHandler {
   async deleteAlbumByIdHandler(request, h) {
     try {
       const { id } = request.params;
+      const { id: credentialId } = request.auth.credentials;
+      await this._service.verifyAlbumOwner(id, credentialId);
       await this._service.deleteAlbumById(id);
       return {
         status: 'success',

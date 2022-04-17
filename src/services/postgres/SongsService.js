@@ -10,14 +10,14 @@ class SongsService {
     this._pool = new Pool();
   }
 
-  async addSong({ title, performer, year, genre, duration, albumId, }) {
+  async addSong({ title, performer, year, genre, duration, albumId, owner }) {
     const id = nanoid(16);
     const createdAt = new Date().toISOString();
     const updatedAt = createdAt;
 
     const query = {
-      text: 'INSERT INTO songs VALUES($1, $2, $3, $4, $5, $6, $7, $8,$9) RETURNING id',
-      values: [id, albumId, title, year, genre, performer, duration, createdAt,updatedAt],
+      text: 'INSERT INTO songs VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10) RETURNING id',
+      values: [id, albumId, title, year, genre, performer, duration, createdAt, updatedAt, owner],
     };
 
     const result = await this._pool.query(query);
@@ -29,9 +29,10 @@ class SongsService {
     return result.rows[0].id;
   }
 
-  async getSongs() {
+  async getSongs(owner) {
     const query = {
-      text: 'SELECT * FROM songs',
+      text: 'SELECT * FROM songs WHERE owner = $1',
+      values: [owner],
     }
 
     const result = await this._pool.query(query);
@@ -84,6 +85,21 @@ class SongsService {
 
     if (!result.rows.length) {
       throw new NotFoundError('Song fail to delete. Id not found');
+    }
+  }
+
+  async verifySongOwner(id, owner) {
+    const query = {
+      text: 'SELECT * FROM songs WHERE id = $1',
+      values: [id],
+    };
+    const result = await this._pool.query(query);
+    if (!result.rows.length) {
+      throw new NotFoundError('Songs not found');
+    }
+    const note = result.rows[0];
+    if (note.owner !== owner) {
+      throw new AuthorizationError('You not have permitted to access this resource');
     }
   }
 }
