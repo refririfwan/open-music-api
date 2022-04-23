@@ -1,5 +1,5 @@
 {
-  "name": "open-music-api-v2",
+  "name": "open-music-api",
   "version": "2.0.0",
   "description": "Terdapat 6 kriteria utama yang harus Anda penuhi dalam membuat proyek OpenMusic API.",
   "main": "index.js",
@@ -11,15 +11,15 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/refririfwan/open-music-api-v1.git"
+    "url": "git+https://github.com/refririfwan/open-music-api.git"
   },
   "keywords": [],
   "author": "",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/refririfwan/open-music-api-v1/issues"
+    "url": "https://github.com/refririfwan/open-music-api/issues"
   },
-  "homepage": "https://github.com/refririfwan/open-music-api-v1#readme",
+  "homepage": "https://github.com/refririfwan/open-music-api#readme",
   "devDependencies": {
     "eslint": "^8.7.0",
     "eslint-config-airbnb-base": "^14.1.0",
