@@ -1,7 +1,7 @@
 {
   "name": "open-music-api-v1",
   "version": "1.0.0",
-  "description": "Kriteria OpenMusic API versi 1  Terdapat 5 kriteria utama yang harus Anda penuhi dalam membuat proyek OpenMusic API.",
+  "description": "Terdapat 6 kriteria utama yang harus Anda penuhi dalam membuat proyek OpenMusic API.",
   "main": "index.js",
   "scripts": {
     "start-prod": "NODE_ENV=production node ./src/server.js",
