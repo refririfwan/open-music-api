@@ -1,6 +1,6 @@
 {
-  "name": "open-music-api-v1",
-  "version": "1.0.0",
+  "name": "open-music-api-v2",
+  "version": "2.0.0",
   "description": "Terdapat 6 kriteria utama yang harus Anda penuhi dalam membuat proyek OpenMusic API.",
   "main": "index.js",
   "scripts": {
