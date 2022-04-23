@@ -1,8 +1,8 @@
 /* eslint-disable no-underscore-dangle */
+const { Pool } = require('pg');
 const { nanoid } = require('nanoid');
 const InvariantError = require('../../exceptions/InvariantError');
 const NotFoundError = require('../../exceptions/NotFoundError');
-const { Pool } = require('pg');
 const { mapDBToModel } = require('../../utils/mapDBToModelSongs');
 
 class SongsService {
@@ -10,14 +10,16 @@ class SongsService {
     this._pool = new Pool();
   }
 
-  async addSong({ title, performer, year, genre, duration, albumId, }) {
+  async addSong({
+    title, performer, year, genre, duration, albumId,
+  }) {
     const id = nanoid(16);
     const createdAt = new Date().toISOString();
     const updatedAt = createdAt;
 
     const query = {
       text: 'INSERT INTO songs VALUES($1, $2, $3, $4, $5, $6, $7, $8,$9) RETURNING id',
-      values: [id, albumId, title, year, genre, performer, duration, createdAt,updatedAt],
+      values: [id, albumId, title, year, genre, performer, duration, createdAt, updatedAt],
     };
 
     const result = await this._pool.query(query);
@@ -32,7 +34,7 @@ class SongsService {
   async getSongs() {
     const query = {
       text: 'SELECT * FROM songs',
-    }
+    };
 
     const result = await this._pool.query(query);
 
@@ -58,7 +60,9 @@ class SongsService {
     return result.rows.map(mapDBToModel)[0];
   }
 
-  async editSongById(id, { title, performer, year, genre, duration, albumId, }) {
+  async editSongById(id, {
+    title, performer, year, genre, duration, albumId,
+  }) {
     const updatedAt = new Date().toISOString();
 
     const query = {
@@ -71,7 +75,6 @@ class SongsService {
     if (!result.rows.length) {
       throw new NotFoundError('Failed update song. Id not found');
     }
-
   }
 
   async deleteSongById(id) {
