@@ -3,6 +3,7 @@ const { Pool } = require('pg');
 const { nanoid } = require('nanoid');
 const InvariantError = require('../../exceptions/InvariantError');
 const NotFoundError = require('../../exceptions/NotFoundError');
+const AuthorizationError = require('../../exceptions/AuthorizationError');
 const { mapDBToModel } = require('../../utils/mapDBToModelPlaylists');
 
 class PlaylistsService {
@@ -29,9 +30,10 @@ class PlaylistsService {
     return result.rows[0].id;
   }
 
-  async getPlaylists() {
+  async getPlaylists(owner) {
     const query = {
-      text: 'SELECT * FROM playlists',
+      text: 'SELECT * FROM playlists WHERE owner = $1',
+      values: [owner],
     };
 
     const result = await this._pool.query(query);
@@ -43,6 +45,20 @@ class PlaylistsService {
     return result.rows.map(mapDBToModel);
   }
 
+  async getPlaylistsById(id) {
+    const query = {
+      text: 'SELECT * FROM playlists WHERE id = $1',
+      values: [id],
+    };
+    const result = await this._pool.query(query);
+
+    if (!result.rows.length) {
+      throw new NotFoundError('Playlist not found');
+    }
+
+    return result.rows.map(mapDBToModel)[0];
+  }
+
   async deletePlaylistById(id) {
     const query = {
       text: 'DELETE FROM playlists WHERE id = $1 RETURNING id',
@@ -52,7 +68,22 @@ class PlaylistsService {
     const result = await this._pool.query(query);
 
     if (!result.rows.length) {
-      throw new NotFoundError('Album fail to delete. Id not found');
+      throw new NotFoundError('Playlist fail to delete. Id not found');
+    }
+  }
+
+  async verifyPlaylistOwner(id, owner) {
+    const query = {
+      text: 'SELECT * FROM playlists WHERE id = $1',
+      values: [id],
+    };
+    const result = await this._pool.query(query);
+    if (!result.rows.length) {
+      throw new NotFoundError('Playlist not found');
+    }
+    const note = result.rows[0];
+    if (note.owner !== owner) {
+      throw new AuthorizationError('You not have access this resource');
     }
   }
 }
