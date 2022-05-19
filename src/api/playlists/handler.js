@@ -69,7 +69,7 @@ class PlaylistsHandler {
       const { id } = request.params;
       const { id: credentialId } = request.auth.credentials;
 
-      await this._service.verifyNoteOwner(id, credentialId);
+      await this._service.verifyPlaylistAccess(id, credentialId);
       const playlist = await this._service.getPlaylistsById(id);
       return {
         status: 'success',
@@ -103,7 +103,7 @@ class PlaylistsHandler {
       this._validator.validateNotePayload(request.payload);
       const { id } = request.params; const { id: credentialId } = request.auth.credentials;
 
-      await this._service.verifyNoteOwner(id, credentialId);
+      await this._service.verifyPlaylistAccess(id, credentialId);
       await this._service.editPlaylistById(id, request.payload);
 
       return {
