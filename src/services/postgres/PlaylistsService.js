@@ -101,15 +101,15 @@ class PlaylistsService {
     if (!result.rows.length) {
       throw new NotFoundError('Playlist not found');
     }
-    const note = result.rows[0];
-    if (note.owner !== owner) {
+    const playlist = result.rows[0];
+    if (playlist.owner !== owner) {
       throw new AuthorizationError('You not have access this resource');
     }
   }
 
   async verifyPlaylistAccess(playlistId, userId) {
     try {
-      await this.verifyNoteOwner(playlistId, userId);
+      await this.verifyPlaylistOwner(playlistId, userId);
     } catch (error) {
       if (error instanceof NotFoundError) {
         throw error;
