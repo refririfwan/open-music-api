@@ -1,7 +1,7 @@
 {
-  "name": "open-music-api-v1",
-  "version": "1.0.0",
-  "description": "Kriteria OpenMusic API versi 1  Terdapat 5 kriteria utama yang harus Anda penuhi dalam membuat proyek OpenMusic API.",
+  "name": "open-music-api",
+  "version": "2.0.0",
+  "description": "Terdapat 6 kriteria utama yang harus Anda penuhi dalam membuat proyek OpenMusic API.",
   "main": "index.js",
   "scripts": {
     "start-prod": "NODE_ENV=production node ./src/server.js",
@@ -11,15 +11,15 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/refririfwan/open-music-api-v1.git"
+    "url": "git+https://github.com/refririfwan/open-music-api.git"
   },
   "keywords": [],
   "author": "",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/refririfwan/open-music-api-v1/issues"
+    "url": "https://github.com/refririfwan/open-music-api/issues"
   },
-  "homepage": "https://github.com/refririfwan/open-music-api-v1#readme",
+  "homepage": "https://github.com/refririfwan/open-music-api#readme",
   "devDependencies": {
     "eslint": "^8.7.0",
     "eslint-config-airbnb-base": "^14.1.0",
@@ -28,6 +28,8 @@
   },
   "dependencies": {
     "@hapi/hapi": "^20.2.1",
+    "@hapi/jwt": "^2.1.1",
+    "bcrypt": "^5.0.1",
     "dotenv": "^16.0.0",
     "joi": "^17.6.0",
     "nanoid": "^3.2.0",

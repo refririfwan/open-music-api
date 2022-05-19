@@ -1,0 +1,21 @@
+{
+  "cSpell.words": [
+    "albumid",
+    "Anda",
+    "dalam",
+    "harus",
+    "kriteria",
+    "membuat",
+    "openmusicapp",
+    "penuhi",
+    "proyek",
+    "Terdapat",
+    "utama"
+  ],
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": true
+  },
+  "eslint.validate": [
+    "javascript"
+  ]
+}
