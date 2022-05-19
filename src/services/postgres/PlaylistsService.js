@@ -59,6 +59,19 @@ class PlaylistsService {
     return result.rows.map(mapDBToModel)[0];
   }
 
+  async editPlaylistById(id, { name, owner }) {
+    const query = {
+      text: 'UPDATE playlists SET name = $1, owner = $2  WHERE id = $3 RETURNING id',
+      values: [name, owner, id],
+    };
+
+    const result = await this._pool.query(query);
+
+    if (!result.rows.length) {
+      throw new NotFoundError('Failed update playlist. Id not found');
+    }
+  }
+
   async deletePlaylistById(id) {
     const query = {
       text: 'DELETE FROM playlists WHERE id = $1 RETURNING id',
